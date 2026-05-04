@@ -1,10 +1,10 @@
 # 🏛️ CivicAI — Thailand Administrative Assistant
 
-Conversational assistant built on Claude (Anthropic) to help citizens and expats navigate administrative procedures in Thailand.
+Conversational assistant built on Claude (Anthropic) to help french expats navigate administrative procedures in Thailand.
 
 ## Demo
 
-![CivicAI Interface](static/demo.png)
+![CivicAI Interface](static/CivicAI_screenshot.png)
 
 ---
 
