@@ -1,6 +1,6 @@
-# 🏛️ CivicAI — Assistant Administratif Thaïlande
+# 🏛️ CivicAI — Thailand Administrative Assistant
 
-Assistant conversationnel basé sur Claude (Anthropic) pour aider les citoyens et expatriés à naviguer les démarches administratives en Thaïlande.
+Conversational assistant built on Claude (Anthropic) to help citizens and expats navigate administrative procedures in Thailand.
 
 ## Demo
 
@@ -8,57 +8,57 @@ Assistant conversationnel basé sur Claude (Anthropic) pour aider les citoyens e
 
 ---
 
-## Stack technique
+## Tech Stack
 
-| Couche | Technologie |
+| Layer | Technology |
 |---|---|
 | LLM | Claude Sonnet (Anthropic) |
 | Agent | LangGraph |
 | RAG | ChromaDB + Sentence Transformers |
-| Recherche web | Tavily API |
+| Web search | Tavily API |
 | Backend | FastAPI + Uvicorn |
-| Frontend | HTML/CSS/JS vanilla |
-| Déploiement | Docker + Docker Compose |
+| Frontend | Vanilla HTML/CSS/JS |
+| Deployment | Docker + Docker Compose |
 
 ---
 
 ## Architecture
 
 ```
-Navigateur (interface web)
+Browser (web interface)
         ↓ POST /chat
 FastAPI (api.py)
         ↓
-Agent LangGraph (agent.py)
-        ├── search_docs  → ChromaDB (RAG sur docs administratifs)
-        └── web_search   → Tavily (infos récentes)
+LangGraph Agent (agent.py)
+        ├── search_docs  → ChromaDB (RAG on administrative docs)
+        └── web_search   → Tavily (recent information)
 ```
 
-### Logique de routing
+### Routing Logic
 
-1. L'agent cherche **toujours dans les docs locaux** (`search_docs`) en premier
-2. Si le score de similarité moyen est < 0.5 → bascule sur `web_search`
-3. L'historique conversationnel est maintenu côté client et envoyé à chaque requête
-
----
-
-## Fonctionnalités
-
-- **RAG hybride** — base de connaissance locale + recherche web en fallback
-- **Score de confiance** — détection automatique des questions hors-domaine
-- **Historique conversationnel** — Claude se souvient du contexte de la conversation
-- **Interface web** — chat avec suggestions de questions
-- **Déployable** — Dockerfile multi-stage optimisé
+1. The agent **always searches local docs** (`search_docs`) first
+2. If the average similarity score is < 0.5 → falls back to `web_search`
+3. Conversation history is maintained client-side and sent with each request
 
 ---
 
-## Installation locale
+## Features
 
-### Prérequis
+- **Hybrid RAG** — local knowledge base + web search as fallback
+- **Confidence score** — automatic detection of out-of-domain questions
+- **Conversation history** — Claude remembers the conversation context
+- **Web interface** — chat with question suggestions
+- **Deployable** — optimized multi-stage Dockerfile
+
+---
+
+## Local Installation
+
+### Prerequisites
 
 - Python 3.12+
-- [uv](https://docs.astral.sh/uv/) — gestionnaire de packages
-- Clés API : [Anthropic](https://console.anthropic.com) + [Tavily](https://tavily.com)
+- [uv](https://docs.astral.sh/uv/) — package manager
+- API keys: [Anthropic](https://console.anthropic.com) + [Tavily](https://tavily.com)
 
 ### Setup
 
@@ -66,53 +66,53 @@ Agent LangGraph (agent.py)
 git clone https://github.com/AlexMo-1205/civicai.git
 cd civicai
 
-# Installe les dépendances
+# Install dependencies
 uv sync
 
-# Configure les variables d'environnement
+# Configure environment variables
 cp .env.example .env
-# Édite .env avec tes clés API
+# Edit .env with your API keys
 
-# Génère la base vectorielle
+# Generate the vector database
 uv run python ingest.py
 
-# Lance le serveur
+# Start the server
 uv run uvicorn api:app --reload
 ```
 
-Ouvre [http://localhost:8000](http://localhost:8000)
+Open [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## Déploiement Docker
+## Docker Deployment
 
 ```bash
-# Build et lance
+# Build and start
 docker compose up --build
 
-# Arrête
+# Stop
 docker compose down
 ```
 
-L'app est accessible sur [http://localhost:8000](http://localhost:8000).
+The app is accessible at [http://localhost:8000](http://localhost:8000).
 
-La base vectorielle ChromaDB est persistée via un volume Docker — elle n'est pas régénérée à chaque redémarrage.
+The ChromaDB vector database is persisted via a Docker volume — it is not regenerated on every restart.
 
 ---
 
-## Structure du projet
+## Project Structure
 
 ```
 civicai/
-├── docs/                    # Documents administratifs
+├── docs/                    # Administrative documents
 │   ├── visa_touriste.txt
 │   ├── permis_travail.txt
 │   └── carte_residence.txt
 ├── static/
-│   └── index.html           # Interface web
-├── agent.py                 # Agent LangGraph
-├── api.py                   # Backend FastAPI
-├── ingest.py                # Ingestion RAG → ChromaDB
+│   └── index.html           # Web interface
+├── agent.py                 # LangGraph agent
+├── api.py                   # FastAPI backend
+├── ingest.py                # RAG ingestion → ChromaDB
 ├── Dockerfile               # Multi-stage build
 ├── docker-compose.yml
 ├── pyproject.toml
@@ -121,22 +121,22 @@ civicai/
 
 ---
 
-## Ajouter des documents
+## Adding Documents
 
-1. Ajoute tes fichiers `.txt` dans `docs/`
-2. Relance l'ingestion :
+1. Add your `.txt` files to `docs/`
+2. Re-run the ingestion:
 
 ```bash
 uv run python ingest.py
-# ou dans Docker :
+# or in Docker:
 docker compose up --build
 ```
 
 ---
 
-## Variables d'environnement
+## Environment Variables
 
-Crée un fichier `.env` à partir de `.env.example` :
+Create a `.env` file from `.env.example`:
 
 ```
 ANTHROPIC_API_KEY=sk-ant-...
@@ -145,34 +145,34 @@ TAVILY_API_KEY=tvly-...
 
 ---
 
-## Choix techniques
+## Technical Choices
 
-**Pourquoi LangGraph plutôt que LangChain ?**
-LangGraph modélise l'agent comme un graphe d'états explicite — les transitions sont lisibles, debuggables et extensibles sans modifier la logique existante.
+**Why LangGraph instead of LangChain?**
+LangGraph models the agent as an explicit state graph — transitions are readable, debuggable, and extensible without modifying existing logic.
 
-**Pourquoi ChromaDB ?**
-Base vectorielle locale, zéro infrastructure. Parfait pour un MVP — migrable vers pgvector ou Pinecone en prod sans changer le code d'ingestion.
+**Why ChromaDB?**
+Local vector database, zero infrastructure. Perfect for an MVP — migratable to pgvector or Pinecone in production without changing the ingestion code.
 
-**Pourquoi un score de confiance ?**
-Sans seuil de pertinence, l'agent peut synthétiser des chunks non pertinents et halluciner une réponse confiante. Le fallback automatique vers `web_search` quand le score < 0.5 garantit une réponse toujours sourcée.
+**Why a confidence score?**
+Without a relevance threshold, the agent can synthesize irrelevant chunks and hallucinate a confident answer. The automatic fallback to `web_search` when the score < 0.5 ensures responses are always sourced.
 
-**Pourquoi du JS vanilla pour le frontend ?**
-Zéro dépendance, zéro build step. L'interface est simple et déployable statiquement.
+**Why vanilla JS for the frontend?**
+Zero dependencies, zero build step. The interface is simple and statically deployable.
 
 ---
 
 ## Roadmap
 
-- [ ] Support PDF en plus des fichiers txt
-- [ ] Streaming des réponses (WebSockets)
-- [ ] Déploiement GCP Cloud Run
-- [ ] Support multilingue (thaï, anglais, français)
-- [ ] Authentification utilisateur
+- [ ] PDF support in addition to txt files
+- [ ] Response streaming (WebSockets)
+- [ ] GCP Cloud Run deployment
+- [ ] Multilingual support (Thai, English, French)
+- [ ] User authentication
 
 ---
 
-## Auteur
+## Author
 
-**Alex Mo** — [@AlexMo-1205](https://github.com/AlexMo-1205)
+**Alexis Monnier** — [@AlexMo-1205](https://github.com/AlexMo-1205)
 
-Data Scientist | Bangkok, Thaïlande
+ML/AI Engineer - Data Scientist | Bangkok, Thailand
